@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+version = '1.0-SNAPSHOT'
+
+ext {
+    karateVersion = '1.2.0.RC3'
+    cucumberReporting = '5.8.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "com.intuit.karate:karate-junit5:${karateVersion}"
+    implementation "net.masterthought:cucumber-reporting:${cucumberReporting}"
+    implementation 'com.rabbitmq:amqp-client:5.13.1'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.16'
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'org.projectlombok:lombok:1.18.20'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "karate.options", System.properties.getProperty("karate.options")
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    systemProperty "baseUrl", System.properties.getProperty("baseUrl")
+    outputs.upToDateWhen { false }
+}
+
+sourceSets {
+    test {
+        resources {
+            srcDir file('src/test/java')
+            exclude '**/*.java'
+        }
+    }
+}
